@@ -8,6 +8,7 @@ from django.db import models
 # Create your models here.
 
 
+
 class VehicleType(models.Model):
     name = models.CharField(max_length=32)
     max_capacity = models.PositiveIntegerField()
@@ -21,8 +22,8 @@ class Vehicle(models.Model):
     passengers = models.PositiveIntegerField()
     vehicle_type = models.ForeignKey(VehicleType, null=True, on_delete=models.SET_NULL)
     number_plate = models.CharField(max_length=10)
-    fuel_efficiency = models.DecimalField(max_digits=6, decimal_places=2) # in km/L
-    fuel_tank_size = models.DecimalField(max_digits=6, decimal_places=2)
+    fuel_efficiency = models.DecimalField(max_digits=6, decimal_places=2, default=None) # in km/L
+    fuel_tank_size = models.DecimalField(max_digits=6, decimal_places=2, default=None)
 
     def __str__(self) -> str:
         return self.name
@@ -40,6 +41,13 @@ class Vehicle(models.Model):
 
         return seat_distribution
 
+    @staticmethod
+    def validate_number_plate(number_plate):
+        split_number_plate = number_plate.split('-')
+        if len(split_number_plate) == 3:    
+            return True if not split_number_plate[0].isnumeric() and split_number_plate[1].isnumeric() and split_number_plate[2].isnumeric() else False
+        else: return False
+
 class Journey(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
     start = models.DateField()
@@ -50,12 +58,13 @@ class Journey(models.Model):
     
     def is_finished(self):
         return (self.end != None and self.end <= date.today())
+    
 
 class ServiceArea(models.Model):
     kilometer = models.IntegerField()
     gas_price = models.PositiveIntegerField()
-    left_station = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
-    right_station = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
+    left_station = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='left_st')
+    right_station = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='right_st')
 
     def validate_left(self):
         if self.left_station == None:

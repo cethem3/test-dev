@@ -1,7 +1,8 @@
 import pytest
 from django.core import mail
+import json
 
-from adventure import models, notifiers, repositories, usecases, views
+from adventure import models, notifiers, repositories, views
 
 from .test_02_usecases import MockJourneyRepository
 
@@ -53,28 +54,49 @@ class TestCreateServiceAreaAPIView:
                 id=1, kilometer=60, gas_price=784
             ),
         )
-
         payload = {"kilometer":60, "gas_price":784}
         response = client.post("/api/adventure/create-service-area/", payload)  
         assert response.status_code == 201
 
-@pytest.mark.skip  # Remove
 class TestGetVehicleAPIView:
+    
     def test_get(self, client, mocker):
-        # TODO: Implement endpoint to get full list of vehicles
-        pass
-    def test_get_by_license_plate(self, client, mocker):
-        # TODO: Implement endpoint to get vehicle data by license plate
-        pass
+        vehicles = models.Vehicle.objects.all()
+        mocker.patch.object(
+            models.Vehicle.objects, "get", return_value=vehicles
+        )
+        response = client.get("/api/adventure/vehicles/")
+        print(response)
+        assert response.status_code == 200
+        assert len(vehicles) == len(json.loads(response.content))
 
-@pytest.mark.skip  # Remove
+
+
+    @pytest.mark.skip
+    def test_get_by_license_plate(self, client, mocker):
+        number_plate = 'AA-10-11'
+        vehicle = models.Vehicle.objects.get(number_plate=number_plate)
+        mocker.patch.object(
+            models.Vehicle.objects, "get", return_value=vehicle
+        )
+        response = client.get(f"/api/adventure/vehicle/{number_plate}")
+        
+        assert response.status_code == 200
+        assert len(vehicle) == len(json.loads(response.content))
+
 class TestGetServiceAreaAPIView:
+    @pytest.mark.skip
     def test_get(self, client, mocker):
-        # TODO: Implement endpoint to get full list of service areas
-        pass
+        mocker.patch.object(models.ServiceArea.objects, "get")
+        response = client.get("/api/adventure/service-area/")
+        print(response)
+        assert response.status_code == 200
+    @pytest.mark.skip
     def test_get_by_kilometer(self, client, mocker):
-        # TODO: Implement endpoint to get service area by kilometer
-        pass
+        mocker.patch.object(models.ServiceArea.objects, "get")
+        response = client.get("/api/adventure/service-area-by-kilometer/")
+        print(response)
+        assert response.status_code == 200
 
 class TestStartJourneyAPIView:
     def test_api(self, client, mocker):

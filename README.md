@@ -65,7 +65,10 @@ Necesitamos que desarrolles un script o una API separada del proyecto safari, en
 # Para conocerte mejor
 
 1. Cuáles crees que son los aspectos más importantes al momento de hacer Code Review
+    Mejorar la calidad del código y la comunicación del equipo.
 2. Has trabajado con control de versiones? Cuál ha sido el flujo que has utilizado? Por favor explicar.
+    Si, mediante el flujo de trabajo de ramas, se crean ramas para cada función o incidencia a partir de la rama principal con el último estado del proyecto, cuando se tiene el código listo se envía a la rama remota (de la función) para realizar el code review y una vez listo, se añade a la rama principal.
 3. Cuál ha sido tu experiencia utilizando herramientas fuera de desarrollo del código mismo? (AWS, GCP, VPS, Docker, etc.)
-4. Tienes algún servicio en la nube favorito? Cuál y por qué?
-5. Has tenido experiencia con microservicios? En caso de que la tengas, podrías explicar por qué en ese caso fue mejor un microservicio que otro tipo de arquitectura?
+    He utilizado Docker desde hace 6 meses aproximadamente, entiendo el uso de Dockerfile y docker compose.
+4. Tienes algún servicio en la nube favorito? Cuál y por qué? No.
+5. Has tenido experiencia con microservicios? En caso de que la tengas, podrías explicar por qué en ese caso fue mejor un microservicio que otro tipo de arquitectura? Sí, es mejor por el código reutilizable y la integración continua
